@@ -9,21 +9,66 @@ models = db["models"]
 cars = db["cars"]
 drivers = db["drivers"]
 
+def show_brands():
 
-br = brands.insert_one({
-    "name": "WV",
-    "country": "germany",
-    "description": "lorem ipsum dolor et",
-    "location": "Berlin"
-})
+    my_brands = brands.find({},{"_id":0})
+    for brand in my_brands:
+        print(brand["name"])
 
-print(br.inserted_id)
+def add_brand():
+    name = input("Enter a name: ")
+    description = input("Enter a description: ")
+    country = input("Enter a country: ")
+    location = input("Enter a location: ")
+
+    res = brands.insert_one({
+        "name": name, 
+        "decription": description,
+        "country": country,
+        "location": location
+        })
+    
+    print(f"new brand was inserted with _id : {res.inserted_id}") 
+
+def update_brand():
+    new_location = input("Enter new location: ")
+
+    query = {"name": "mercedes"}
+    new_values = {"$set": {"location": new_location}}
+
+    brands.update_one(query,new_values)
+    print(" brand with name mercedes was successfully updated") 
+
+def delete_brand():
+    print("delete brand") 
 
 
+def menu():
+    print("""
+        1- to show brands 
+        2- to add new brand 
+        3- to update brand by name
+        4- to delete brand
+        5- to quit the program
+        """)
 
 
+menu()
 
+choice = int(input("Enter your choice between 1 and 5: "))
+while choice in range(6):
+    if choice == 1: 
+        show_brands()  
+    elif choice == 2: 
+        add_brand()
+    elif choice == 3:
+        update_brand()
+    elif choice == 4:
+        delete_brand()
+    elif choice == 5:
+        break
+    else: 
+        print("Entrez un nombre entre 1 et 5")
 
-
-
-print("Welcome to cars mongo project")
+    menu()
+    choice = int(input("Enter your choice between 1 and 5: "))   
